@@ -874,8 +874,8 @@
       .reveal.show .fs i::after {
         width: var(--w);
       }
-      .fs:nth-child(6) i::after,
-      .fs:nth-child(7) i::after {
+      .fs:nth-child(7) i::after,
+      .fs:nth-child(8) i::after {
         background: linear-gradient(90deg, #ff4d6d, #ff9770);
       }
       .fs b {
@@ -1080,6 +1080,66 @@
         font-size: 1.4rem;
         line-height: 1;
         animation: bounce2 1s ease-in-out infinite;
+      }
+      /* trading-card proportions: wider, shorter */
+      .fcard {
+        width: min(92vw, 400px);
+      }
+      .fcard .fc-photo {
+        aspect-ratio: 16/10;
+      }
+      .fc-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 16px;
+      }
+      .fcard .fs {
+        grid-template-columns: 50px 1fr 26px;
+        gap: 6px;
+        font-size: 0.68rem;
+        letter-spacing: 0.04em;
+      }
+      .fcard .fs b {
+        font-size: 0.85rem;
+      }
+      .fcard .fs i {
+        height: 9px;
+      }
+      /* gift reveal */
+      .prize {
+        width: min(92vw, 520px);
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: scale(0.6) rotate(-6deg);
+        transition:
+          max-height 0.9s ease,
+          opacity 0.5s ease,
+          transform 0.9s cubic-bezier(0.2, 1.6, 0.4, 1),
+          margin 0.6s ease;
+      }
+      .prize.open {
+        max-height: 420px;
+        opacity: 1;
+        transform: none;
+        margin-top: 24px;
+      }
+      .prize-tag {
+        font-family: "Space Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--pl);
+        margin-bottom: 10px;
+      }
+      .prize img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 14px;
+        border: 3px solid var(--line);
+        box-shadow: 0 26px 50px -10px #000c;
       }
       @keyframes pulse {
         50% {
@@ -1381,8 +1441,8 @@
         border-radius: inherit;
         background: var(--pl);
       }
-      .fs:nth-child(6) i::after,
-      .fs:nth-child(7) i::after {
+      .fs:nth-child(7) i::after,
+      .fs:nth-child(8) i::after {
         background: var(--warn);
       }
       .fs b {
@@ -1655,6 +1715,9 @@
             <span>SNAKE</span><i style="--w: 100%"></i><b data-count="100">0</b>
           </div>
           <div class="fs">
+            <span>BEARD</span><i style="--w: 100%"></i><b data-count="100">0</b>
+          </div>
+          <div class="fs">
             <span>GOLF</span><i style="--w: 50%"></i><b data-count="50">0</b>
           </div>
           <div class="fs">
@@ -1791,6 +1854,7 @@
           <li>Apply sunscreen to the scalp daily</li>
           <li>Practice golf (yes, you, Serge)</li>
           <li>Still be a legend (non-negotiable)</li>
+          <li>Keep the beard on point (max-level grooming, no shaving nerfs)</li>
           <li>Remain an elite-tier brother (lifetime contract, no trades)</li>
           <li>Unlock Legendary Dad mode (new player loading...)</li>
         </ul>
@@ -1871,6 +1935,10 @@
         </ul>
       </div>
       <button id="gift" class="reveal d3">🎁 Open me</button>
+      <div class="prize" id="prize" aria-hidden="true">
+        <div class="prize-tag">Unlocked: Factorio</div>
+        <img src="photos/factorio-banner.png" alt="Factorio" />
+      </div>
     </section>
 
     <script>
@@ -2100,6 +2168,13 @@
       document.getElementById("gift").onclick = function () {
         boom();
         this.textContent = "Now go check Steam 🎮";
+        const prize = document.getElementById("prize");
+        prize.classList.add("open");
+        prize.setAttribute("aria-hidden", "false");
+        setTimeout(
+          () => prize.scrollIntoView({ behavior: "smooth", block: "center" }),
+          400,
+        );
       };
       // auto confetti when finale button appears
       new IntersectionObserver(
